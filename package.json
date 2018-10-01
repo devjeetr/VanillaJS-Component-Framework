@@ -2,13 +2,15 @@
   "name": "component-framework",
   "version": "1.0.0",
   "description": "",
-  "main": "webpack.config.js",
+  "main": "src/js/Component/index.js",
+  "module": "src/js/Component/index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "build-dev": "webpack --mode=development",
     "build-prod": "webpack --mode=production",
+    "build-lib": "webpack ---mode=production --config=webpack.library.config.js",
     "server": "webpack-dev-server --inline --hot --mode=development"
   },
   "keywords": [],

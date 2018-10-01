@@ -1,47 +1,45 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 
-const html_entry_point = "./src/html/index.html";
-const html_output = "./index.html";
 
 module.exports = {
-  devtool: "source-map",
-  entry: ["./src/js/index.js"],
+  devtool: 'source-map',
+  entry: ['./src/js/index.js'],
   module: {
     rules: [
       {
-        enforce: "pre",
+        enforce: 'pre',
         test: /\.js$/,
-        exclude: [/node_modules/, /dist/],
+        exclude: /node_modules/,
         use: {
-          loader: "eslint-loader",
+          loader: 'eslint-loader',
           options: {
-            emitWarning: true
-          }
-        }
+            emitWarning: true,
+          },
+        },
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
-        }
+          loader: 'babel-loader',
+        },
       },
       {
         test: /\.html$/,
         use: {
-          loader: "html-loader",
-          options: {minimize: true}
-        }
+          loader: 'html-loader',
+          options: { minimize: true },
+        },
       },
       {
         test: /\.s?css$/,
-        use: ["style-loader", "css-loader", "sass-loader"]
-      }
-    ]
+        use: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+    ],
   },
   plugins: [
     new HtmlWebPackPlugin({
-      title: "Component-Framework"
-    })
-  ]
-}
+      title: 'Component-Framework',
+    }),
+  ],
+};
