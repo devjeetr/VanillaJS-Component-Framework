@@ -8,10 +8,4 @@ config.output = {
   
 };
 
-config.externals = {
-  externals: [
-    "vanillajs-framework"
-  ]
-}
-
 module.exports = config;

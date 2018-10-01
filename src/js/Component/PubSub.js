@@ -1,29 +1,37 @@
 /**
  * A simple Pub/Sub module
  */
-const PubSub = {
-  init: function init() {
-    this.store = new Map();
-  },
-  publish: function publish(event, ...args) {
-    if (this.store.has(event)) {
-      const handlers = this.store.get(event);
+const PubSub = function() {
+  let __store;
+
+  function __PubSub() {
+    __store = new Map();
+
+    return __PubSub;
+  }
+
+  __PubSub.emit = function(event, ...args) {
+    if (__store.has(event)) {
+      const handlers = __store.get(event);
       
       handlers.forEach((h) => { h(...args); });
     }
-  },
-  unsubscribe: function unsubscribe() {
+    return __PubSub;
+  }
 
-  },
-  subscribe: function subscribe(event, handler) {
-    if (!this.store.has(event)) {
-      this.store.set(event, []);
+  __PubSub.on = function(event, handler) {
+    if (!__store.has(event)) {
+      __store.set(event, []);
     }
 
-    if (!(handler in this.store.get(event))) {
-      this.store.get(event).push(handler);
+    if (!(handler in __store.get(event))) {
+      __store.get(event).push(handler);
     }
-  },
+
+    return __PubSub;
+  }
+
+  return __PubSub;
 };
 
 export default PubSub;

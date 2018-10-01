@@ -1,15 +1,10 @@
 
-const makeChainable = function (fn, propName) {
+const makeChainable = function (fn) {
   return function (...args) {
-    if (args.length === 0) {
-      return this[propName];
-    }
-
-    fn(...args);
-    return this;
+    const retVal = fn(...args);
+    
+    return retVal || this;
   };
 };
 
-export default {
-  makeChainable,
-};
+export default makeChainable;

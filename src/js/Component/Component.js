@@ -1,53 +1,102 @@
 import PubSub from './PubSub';
-/**
- * Represents a UI Component encapsulating
- * both the view and the
- */
-const Component = {
-  init() {
-    this.__root = null;
-    this.__eventStore = Object.create(PubSub);
-    this.__eventStore.init();
-    this.__events = {};
-  },
+import makeChainable from './utilities';
+
+const Component = function(props) {
+  const baseObj = {root: null};
+  // attribute name
+  // attribute handler
+  const registerComponentAttributes = function(componentAttributes) {
+    let attributes = {};
+    if(!componentAttributes) return attributes;
+
+    for(const attribute in componentAttributes) {
+      const handler = componentAttributes[attribute];
+      this[attribute] = makeChainable(handler).bind(baseObj);
+    }
+  }
+  
+  const componentAttributes = registerComponentAttributes.call(baseObj, props.componentAttributes);
+  
   /**
-   * Renders this component into the given dom element or Component or dom-helper
-   * component.This component is appended to the end of the given element.
+   *                Base API functions
    */
-  render(renderTarget) {
+
+  /**
+   * Renders this component into the given dom-wrapper element
+   * or dom element
+   * @param {} renderTarget 
+   */
+  const render = function(renderTarget) {
     if (!renderTarget) {
       throw Exception('InvalidArgumentException: Render target not specified for Component.render()');
     }
-    if (renderTarget instanceof Element) {
-      renderTarget.appendChild(this.__root.dom());
-    } else {
-      renderTarget.dom().appendChild(this.__root.dom());
+
+    /**
+     * Perform lifetime updates
+     */
+    if(props.initializers.dom) props.initializers.dom.call(baseObj);
+    if(props.initializers.domAttributes) props.initializers.domAttributes.call(baseObj);
+    if(props.initializers.eventListeners) props.initializers.eventListeners.call(baseObj);
+
+    // Check if the user is trying to render this element into a different element
+    // than last render, without detaching
+    if( this.root.parent()
+        && (
+            (renderTarget instanceof Element && (this.root.parent().dom() !== renderTarget))
+            || this.root.parent() != renderTarget
+          )
+      ){
+        console.warn('Warning: Trying to render component into different element than before without detaching');
     }
-  },
+
+    renderTarget.appendChild(this.root.dom());
+  }
+
   /**
-   * returns the root dom element that wraps up
-   * this component
+   * Returns the parent dom element of this 
+   * Component
    */
-  dom() {
-    return this.__root;
-  },
-  /**
-   * Registers the given event handler for the given
-   * event
-   */
-  on(event, handler) {
-    this.__eventStore.subscribe(event, handler);
-    return this;
-  },
+  const parent = function () {
+    if(this.root){
+      return this.root.parent() || undefined;
+    }
+  };
+  
   /**
    * Detaches this component from the document's dom
    * tree if this element has been rendered
    */
-  detach() {
-    if (this.__root && this.__root.dom().parentElement) {
-      this.__root.dom().parentElement.removeChild(this.__root.dom());
+  const detach = function() {
+    if(this.root) {
+      const parent = this.root.parent();
+      if(parent){
+        parent.dom().removeChild(root.dom());
+      }
     }
-  },
+  };
+
+  const clear = function() {
+    // TODO
+    // implement this
+  };
+
+  
+  const baseComponentAPI = {
+    render,
+    clear,
+    parent,
+    detach,
+    clear,
+  };
+
+  /**
+   * return public API
+   */
+  return Object.assign( baseObj, 
+    baseComponentAPI, 
+    props.API || {}, 
+    componentAttributes || {},
+    PubSub());
 };
 
 
