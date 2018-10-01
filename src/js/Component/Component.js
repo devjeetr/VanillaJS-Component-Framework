@@ -3,8 +3,7 @@ import makeChainable from './utilities';
 
 const Component = function(props) {
   const baseObj = {root: null};
-  // attribute name
-  // attribute handler
+
   const registerComponentAttributes = function(componentAttributes) {
     let attributes = {};
     if(!componentAttributes) return attributes;
@@ -30,9 +29,9 @@ const Component = function(props) {
     if (!renderTarget) {
       throw Exception('InvalidArgumentException: Render target not specified for Component.render()');
     }
-
+    if (!this.root) return;
     /**
-     * Perform lifetime updates
+     * Perform lifecycle functions
      */
     if(props.initializers.dom) props.initializers.dom.call(baseObj);
     if(props.initializers.domAttributes) props.initializers.domAttributes.call(baseObj);
