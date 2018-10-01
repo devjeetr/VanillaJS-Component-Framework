@@ -169,4 +169,51 @@ describe("element.js", () => {
       });
     });
 
+    context('testing class()', () => {
+      it('should set class if hasClass is not passed', () => {
+        let elem = el('div');
+        let className = 'new-class';
+
+        elem.class(className);
+
+        expect(elem.dom().classList.contains(className)).to.be.true;
+      });
+
+      it('should set class if hasClass is true', () => {
+        let elem = el('div');
+        let className = 'new-class';
+
+        elem.class(className, true);
+
+        expect(elem.dom().classList.contains(className)).to.be.true;
+      });
+
+      it('should remove class if hasClass is false', () => {
+        let className = 'new-class';
+        let elem = el(`div.${className}`);
+        
+        elem.class(className, false);
+
+        expect(elem.dom().classList.contains(className)).to.be.false;
+      });
+
+      it('should set new class without affecting prior classnames', () => {
+        let className = 'new-class';
+        let elem = el(`div.${className}`);
+        
+        elem.class('another-class');
+
+        expect(elem.dom().classList.contains(className)).to.be.true;
+      });
+
+      it('should remove class without affecting other classnames', () => {
+        let className = 'new-class';
+        let elem = el(`div.${className}.other-class`);
+        
+        elem.class('other-class', false);
+
+        expect(elem.dom().classList.contains('other-class')).to.be.false;
+        expect(elem.dom().classList.contains(className)).to.be.true;
+      });
+    });
 });

@@ -70,30 +70,43 @@ const el = (selector) => {
     return __el;
   };
 
-  __el.parent = () => element ? element.parentElement : null;
-  __el.dom = () => element;
-  __el.detach = () => {
-    if(!element || !element.parentElement) return;
-    
-    if(element) element.parentElement.removeChild(element);
-  };
   /**
      * Applies multiple attributes provided as key value pairs to this current object
      * @param {object} attributes key-value pairs of attribute names and values
      *                            to be applied to this element
      */
-  __el.attrs = (attributes) => {
-    if (!element) return;
+    __el.attrs = (attributes) => {
+      if (!element) return;
+  
+      setProps(element, attributes);
+  
+      return __el;
+    };
 
-    setProps(element, attributes);
 
-    return __el;
+  
+
+  __el.class = (className, hasClass) => {
+    if(!element) return;
+
+    if( (hasClass === null || hasClass === undefined)
+        || hasClass){
+      element.classList.add(className);
+    }else if (hasClass === false) {
+      element.classList.remove(className);
+    }
   };
-
+  
+  /**
+   * DOM Tree handling methods
+   */
+  __el.parent = () => element ? element.parentElement : null;
+  __el.dom = () => element;
+  
   __el.appendChild = (to_append) => {
     if (!element) return;
     if (!to_append) return;
-    
+
     if(to_append instanceof Element) {
       element.appendChild(to_append);
     } else {
@@ -111,18 +124,12 @@ const el = (selector) => {
 
     renderTarget.appendChild(element);
   }
-
-  __el.class = (className, hasClass) => {
-    if(!element) return;
-
-    if( (hasClass === null || hasClass === undefined)
-        || hasClass){
-      element.classList.add(className);
-    }else if (hasClass === False) {
-      element.classList.remove(className);
-    }
+  
+  __el.detach = () => {
+    if(!element || !element.parentElement) return;
+    
+    if(element) element.parentElement.removeChild(element);
   };
-
   __el.clear = () => {
     if (!element) return;
     if (element.parentElement){
@@ -176,6 +183,7 @@ const getClassNames = (expr) => {
 
   return classNames;
 };
+
 const getTag = (expr) => {
   const ELEMENT_TAG_PATTERN = /^([a-zA-Z]+)/;
   // let matches = expr.match(ELEMENT_TAG_PATTERN);
