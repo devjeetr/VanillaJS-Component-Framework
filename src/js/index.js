@@ -16,9 +16,6 @@ function SimpleComponent() {
       label.render(this.root);
     },
     domAttributes: function() {
-      if(this.text()){
-        console.log(this.text());
-      }
     },
     eventHandlers: null
   };
@@ -39,6 +36,7 @@ function SimpleComponent() {
   };
   return Component(props)
 }
+
 window.onload = () => {
   const simpleComponent = SimpleComponent();
   console.log(simpleComponent);

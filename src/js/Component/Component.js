@@ -3,17 +3,8 @@ import makeChainable from './utilities';
 
 const Component = function(props) {
   const baseObj = {root: null};
+  console.log(props);
 
-  const registerComponentAttributes = function(componentAttributes) {
-    let attributes = {};
-    if(!componentAttributes) return attributes;
-
-    for(const attribute in componentAttributes) {
-      const handler = componentAttributes[attribute];
-      this[attribute] = makeChainable(handler).bind(baseObj);
-    }
-  }
-  
   const componentAttributes = registerComponentAttributes.call(baseObj, props.componentAttributes);
   
   /**
@@ -29,7 +20,7 @@ const Component = function(props) {
     if (!renderTarget) {
       throw Exception('InvalidArgumentException: Render target not specified for Component.render()');
     }
-    if (!this.root) return;
+
     /**
      * Perform lifecycle functions
      */
@@ -75,8 +66,9 @@ const Component = function(props) {
   };
 
   const clear = function() {
-    // TODO
-    // implement this
+    if(this.root) {
+      this.root.clear();
+    }
   };
 
   
@@ -98,5 +90,17 @@ const Component = function(props) {
     PubSub());
 };
 
+const registerComponentAttributes = function(componentAttributes) {
+  if(!componentAttributes){
+    return;
+  }
+  let attributes = {};
+  if(!componentAttributes) return attributes;
+
+  for(const attribute in componentAttributes) {
+    const handler = componentAttributes[attribute];
+    this[attribute] = makeChainable(handler).bind(this);
+  }
+}
 
 export default Component;
