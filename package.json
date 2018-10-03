@@ -2,8 +2,8 @@
   "name": "component-framework",
   "version": "1.0.0",
   "description": "",
-  "main": "src/js/Component/index.js",
-  "module": "src/js/Component/index.js",
+  "main": "dist/component-lib.js",
+  "module": "dist/component-lib.js",
   "directories": {
     "test": "tests"
   },
